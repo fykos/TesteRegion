@@ -44,7 +44,6 @@
         CLLocationCoordinate2D location = CLLocationCoordinate2DMake(-16.620842, -49.254790);
         CLCircularRegion *novaRegiao = [[CLCircularRegion alloc] initWithCenter:location radius:50 identifier:@"CasaElis"];
         _regiao = novaRegiao;
-        
     }
     return _regiao;
 }
@@ -57,9 +56,14 @@
 
 #pragma mark - Private methods
 
+- (void)escreveLog:(NSString *)log
+{
+    self.textView.text = [NSString stringWithFormat:@"%@\n%@",log,self.textView.text];
+}
+
 - (void)verificaPermissaoDeLocalizacao
 {
-    self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"verificapermissaodelocalizacao",self.textView.text];
+    [self escreveLog:@"verificapermissaodelocalizacao"];
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
@@ -69,21 +73,21 @@
     
     if(![CLLocationManager locationServicesEnabled])
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"!locationServicesEnabled",self.textView.text];
+        [self escreveLog:@"!locationServicesEnabled"];
     }
     if(![CLLocationManager isMonitoringAvailableForClass:[CLRegion class]])
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"!isMonitoringAvailableForClass-ClRegion",self.textView.text];
+        [self escreveLog:@"!isMonitoringAvailableForClass-ClRegion"];
     }
     if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted  )
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"!authorizationStatus-ClRegion",self.textView.text];
+        [self escreveLog:@"!authorizationStatus-ClRegion"];
     }
     
     if (IS_OS_8_OR_LATER)
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"ios8 requestalwaysauthorization",self.textView.text];
+        [self escreveLog:@"ios8 requestalwaysauthorization"];
         [self.locationManager requestAlwaysAuthorization];//requestWhenInUseAuthorization];
     }
     
@@ -92,7 +96,7 @@
     {
         if (IS_OS_8_OR_LATER)
         {
-            self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"ios8 solicita autorização caso tenha negado acima",self.textView.text];
+            [self escreveLog:@"ios8 solicita autorização caso tenha negado acima"];
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Onde você está?"
                                                                            message:@"Ative sua localização para você saber exatamente a distância que está da TecnoshowComigo."
                                                                     preferredStyle:UIAlertControllerStyleAlert];
@@ -116,7 +120,7 @@
         }
         else
         {
-            self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"<ios8 alerta sobre não ter serviço de localização",self.textView.text];
+            [self escreveLog:@"<ios8 alerta sobre não ter serviço de localização"];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Onde você está?"
                                                             message:@"Ative sua localização para você saber exatamente a distância que está da TecnoshowComigo. Vá para sua tela inicial > Ajustes > Privacidade > Serv. Localização e ative o TecnoshowComigo."
                                                            delegate:self
@@ -127,7 +131,7 @@
     }
     else
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"já está autorizado",self.textView.text];
+        [self escreveLog:@"já está autorizado"];
     }
     
     [self iniciaMonitoramento];
@@ -136,26 +140,34 @@
 
 - (void)iniciaMonitoramento
 {
-    self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"iniciamonitoramento",self.textView.text];
+    [self escreveLog:@"iniciamonitoramento"];
     
+    [self escreveLog:@"stopMonitoringForRegion"];
     [self.locationManager stopMonitoringForRegion:self.regiao];
+
+    [self escreveLog:@"startMonitoringForRegion"];
     [self.locationManager startMonitoringForRegion:self.regiao];
     
+    [self verificaRegioes];
+}
+
+- (void)verificaRegioes
+{
     NSArray *regions = [self.locationManager.monitoredRegions allObjects];
     if (!regions.count)
     {
-        self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"nenhuma região",self.textView.text];
+        [self escreveLog:@"nenhuma região"];
     }
     else
     {
-        self.textView.text = [NSString stringWithFormat:@"%lu %@\n%@",(unsigned long)[regions count],@"regioes",self.textView.text];
+        [self escreveLog:[NSString stringWithFormat:@"%lu %@ sendo monitorada(s)",(unsigned long)[regions count],[regions count]==1?@"regiao":@"regiões"]];
         
         for (int i = 0; i < [regions count]; i++)
         {
             CLRegion *region = [regions objectAtIndex:i];
             //[self.locationManager startMonitoringForRegion:region];
             
-            self.textView.text = [NSString stringWithFormat:@"região %@\n%@",[region identifier],self.textView.text];
+            [self escreveLog:[NSString stringWithFormat:@"região %@",[region identifier]]];
             
         }
     }
@@ -163,28 +175,13 @@
 
 #pragma mark - ViewController life cycle
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
-    self.textView.text = [NSString stringWithFormat:@"%@\n%@",@"didload",self.textView.text];
+    [self escreveLog:@"didload"];
     
     [self verificaPermissaoDeLocalizacao];
-    
-    /*UILocalNotification *notification = [[UILocalNotification alloc] init];
-    notification.alertBody = @"Enter region (push)";
-    notification.soundName = UILocalNotificationDefaultSoundName;
-    NSArray *keyss = @[
-                       @"titulo",
-                       @"mensagem"
-                       ];
-    NSArray *objetoss = @[
-                          @"push",
-                          @"enter region."
-                          ];
-    NSDictionary *dic = [NSDictionary dictionaryWithObjects:objetoss forKeys:keyss];
-    notification.userInfo = dic;
-    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];*/
     
 }
 
@@ -210,13 +207,15 @@
         estaDentro = @"NÃO ESTÁ";
     }
     
-    self.textView.text = [NSString stringWithFormat:@"%@ %f,%f %@\n%@",@"updatelocations",coordenadas.latitude, coordenadas.longitude,estaDentro,self.textView.text];
+    [self escreveLog:[NSString stringWithFormat:@"updatelocations %f,%f %@",coordenadas.latitude, coordenadas.longitude, estaDentro]];
     
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
+    [self escreveLog:[NSString stringWithFormat:@"EnterRegion %@",[region identifier]]];
+    
     UILocalNotification *notification = [[UILocalNotification alloc] init];
     notification.alertBody = @"Enter region (push)";
     notification.soundName = UILocalNotificationDefaultSoundName;
@@ -231,13 +230,12 @@
     NSDictionary *dic = [NSDictionary dictionaryWithObjects:objetoss forKeys:keyss];
     notification.userInfo = dic;
     [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-    
-    self.textView.text = [NSString stringWithFormat:@"EnterRegion %@\n%@",[region identifier],self.textView.text];
-    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
+    [self escreveLog:[NSString stringWithFormat:@"ExiteRegion %@",[region identifier]]];
+    
     UILocalNotification *notification = [[UILocalNotification alloc] init];
     notification.alertBody = @"Exit region (push)";
     NSArray *keyss = @[
@@ -252,16 +250,14 @@
     notification.userInfo = dic;
     notification.soundName = UILocalNotificationDefaultSoundName;
     [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-    
-    self.textView.text = [NSString stringWithFormat:@"ExiteRegion %@\n%@",[region identifier],self.textView.text];
-    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
-    self.textView.text = [NSString stringWithFormat:@"StartMonitoringForRegion %@\n%@",[region identifier],self.textView.text];
-    
+    [self escreveLog:[NSString stringWithFormat:@"StartMonitoringForRegion %@",[region identifier]]];
+    [self verificaRegioes];
 }
+
 
 #pragma mark - Notification center
 
