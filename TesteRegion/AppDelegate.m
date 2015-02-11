@@ -14,9 +14,28 @@
 
 @implementation AppDelegate
 
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:notification.userInfo[@"titulo"]
+                                                    message:[NSString stringWithFormat:@"%@",notification.userInfo[@"mensagem"]]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotif) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:localNotif.userInfo[@"titulo"]
+                                                        message:[NSString stringWithFormat:@"%@",localNotif.userInfo[@"mensagem"]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    
     return YES;
 }
 

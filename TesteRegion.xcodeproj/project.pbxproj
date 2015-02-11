@@ -42,6 +42,7 @@
 		08DDACAD1A8BF34B00A5292E /* TesteRegionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TesteRegionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08DDACB21A8BF34B00A5292E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08DDACB31A8BF34B00A5292E /* TesteRegionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TesteRegionTests.m; sourceTree = "<group>"; };
+		08DDACBD1A8BF91000A5292E /* Location.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Location.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +93,7 @@
 				08DDACA61A8BF34B00A5292E /* LaunchScreen.xib */,
 				08DDAC9B1A8BF34B00A5292E /* TesteRegion.xcdatamodeld */,
 				08DDAC941A8BF34B00A5292E /* Supporting Files */,
+				08DDACBD1A8BF91000A5292E /* Location.gpx */,
 			);
 			path = TesteRegion;
 			sourceTree = "<group>";
@@ -171,6 +173,14 @@
 				TargetAttributes = {
 					08DDAC901A8BF34B00A5292E = {
 						CreatedOnToolsVersion = 6.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					08DDACAC1A8BF34B00A5292E = {
 						CreatedOnToolsVersion = 6.1;
@@ -350,6 +360,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TesteRegion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -360,6 +371,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TesteRegion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
